@@ -16,24 +16,24 @@
   <meta name="author" content="Heart">
   <meta name="keywords" content="">
   
-    <meta name="description" content="光照 渲染管线 InstantOC">
+    <meta name="description" content="线程安全 线程锁">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unity InstantOC">
-<meta property="og:url" content="https://shyheart.github.io/2021/12/23/Unity-InstantOC/index.html">
+<meta property="og:title" content="多线程和线程安全">
+<meta property="og:url" content="https://shyheart.github.io/2021/12/23/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/index.html">
 <meta property="og:site_name" content="Heart Signal">
-<meta property="og:description" content="光照 渲染管线 InstantOC">
+<meta property="og:description" content="线程安全 线程锁">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223201904.png">
-<meta property="article:published_time" content="2021-12-23T12:17:21.000Z">
-<meta property="article:modified_time" content="2021-12-23T13:00:54.573Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223230815.png">
+<meta property="article:published_time" content="2021-12-23T13:12:33.000Z">
+<meta property="article:modified_time" content="2021-12-23T15:09:02.525Z">
 <meta property="article:author" content="Heart">
-<meta property="article:tag" content="Unity">
-<meta property="article:tag" content="花里胡哨">
+<meta property="article:tag" content="CSharp">
+<meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223201904.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223230815.png">
   
   
-  <title>Unity InstantOC - Heart Signal</title>
+  <title>多线程和线程安全 - Heart Signal</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -191,7 +191,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Unity InstantOC">
+            <span class="h2" id="subtitle" title="多线程和线程安全">
               
             </span>
 
@@ -206,7 +206,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-12-23 20:17" pubdate>
+      <time datetime="2021-12-23 21:12" pubdate>
         2021年12月23日 晚上
       </time>
     </span>
@@ -217,7 +217,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      2.4k 字
     </span>
   
 
@@ -226,7 +226,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4 分钟
+      8 分钟
     </span>
   
 
@@ -255,35 +255,50 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Unity InstantOC</h1>
+            <h1 style="display: none">多线程和线程安全</h1>
             
             <div class="markdown-body">
-              <h1 id="Unity-InstantOC"><a href="#Unity-InstantOC" class="headerlink" title="Unity InstantOC"></a>Unity InstantOC</h1><p>InstantOC：一个插件，包括occlusion culling 和 LOD</p>
-<h2 id="一、渲染管线"><a href="#一、渲染管线" class="headerlink" title="一、渲染管线"></a>一、渲染管线</h2><p><strong>渲染管线</strong>：图形数据在GPU上经过运算处理，最后输出到屏幕的过程。                    绘制调用Draw Call：每次引擎（CPU）准备数据并通知GPU的过程。    通俗讲：每帧调用显卡渲染物体的次数。（在starts里Batches后边显示的数字）</p>
-<p>CPU准备数据                 顶点处理：中间有坐标系的转换</p>
-<p>游戏=&gt;图形API=&gt;CPU（决定视锥以内哪些物体需要渲染）=&gt;GPU(显卡）=&gt;顶点处理=&gt;图元装配（连接相邻的点组成三角面）=&gt;光栅化（计算三角面上的像素）=&gt;像素处理（对每个像素区域进行着色）=&gt;缓存（一个存储像素数据的内存块，最重要的是帧缓存（常在显卡中）与深度缓存z-buffer（物体距离摄像机的距离）。）</p>
-<p><img src="https://cdn.jsdelivr.net/gh/xichujn/image/img/image-20210428090432734.png" srcset="/img/loading.gif" lazyload alt="InstantOC"></p>
-<p>一个物体不渲染，CPU与GPU性能都会提高。物体越多、物体精度越高，CPU与GPU性能越低。</p>
-<h2 id="二、occlusion-culling"><a href="#二、occlusion-culling" class="headerlink" title="二、occlusion culling"></a>二、occlusion culling</h2><p>​    <strong>即时遮挡剔除occlusion culling：在物体被渲染前，将摄像机视角内看不见的物体进行剔除，从而减少了每帧渲染数据量，提高渲染性能。（笔试考）</strong></p>
-<p>  默认：摄像机视锥内物体都会被渲染，即使看不见也会被渲染。</p>
-<p>插件samples：每帧摄像机发射的射线数目，数量多会导致CPU性能降低，通常在150-500之间。</p>
-<p>FOV ：视场&lt;—&gt;摄像机中filed of view      View视野&lt;—&gt;摄像机中far  </p>
-<p>hide delay延迟隐藏：射线发射次数。建议50帧-100帧之间。  PreCull Check，建议勾选。</p>
-<p>遮挡剔除同时，要为物体设置一个<strong>盒子碰撞器</strong>（绿色物理边界）。为物体加一个组件—&gt;<strong>box collider</strong>。</p>
-<p><em>注意：不设置碰撞器射线射不到。</em></p>
-<p><strong><em>遮挡剔除优点：减少渲染量。  （功能上没有损失）  缺点：CPU（射线）需要消耗额外性能</em></strong></p>
-<p><strong><em>场景里物体较多且分布较密集（被遮挡的物体多）时使用遮挡剔除。</em></strong></p>
-<h2 id="三、LOD"><a href="#三、LOD" class="headerlink" title="三、LOD"></a><em>三、</em>LOD</h2><p>  LOD（<strong>Level of Detail</strong>多细节层次）：指根据物体模型的节点在显示环境中所处的位置和重要度，决定物体渲染的资源分配，降低非重要物体的面数和细节度，从而获得高效率的渲染运算。 不会降低draw call</p>
-<p><strong>优点：降低非重要物体的面数与精度，从而获得高效率的渲染运算</strong>  </p>
-<p> 缺点：CPU总需要判断距离，变换模型</p>
-<p>适用性：1场景中需要存在高精度模型  2.距离需要变化</p>
-<p>步骤：1.创建层</p>
-<p>  2.创建空物体并将模型添加到其中，模型命名：Lod_0,Lod_1,Lod_2(精度由高到低）</p>
-<p>  3.为父物体指定层与标签</p>
-<p>  4.父物体或子物体添加碰撞器组件</p>
-<p>  5.摄像机附加脚本IOCcam</p>
-<p>Lod1 distance：摄像机到物体距离小于当前距离时，使用Lod_0模型。</p>
-<p>Lod2 distance：摄像机到物体距离大于Lod1且小于当前距离时，使用Lod_1模型，大于当前值使用Lod_2模型</p>
+              <h1 id="多线程和线程安全"><a href="#多线程和线程安全" class="headerlink" title="多线程和线程安全"></a>多线程和线程安全</h1><p><strong>多线程解决什么问题：多任务，提升计算性能</strong></p>
+<h5 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h5><ul>
+<li>单线程单任务 (Task1 =&gt; Task2 =&gt; Task3)</li>
+<li>单线程多任务 (Task1 =&gt; Task2 =&gt; Task3 =&gt; Task1 =&gt; Task2 =&gt; Task3 =&gt; Task1 =&gt; Task2 =&gt; Task3)</li>
+<li>多线程单任务 (任务Task 开启多线程 Task1-1 Task1-2 Task1-3 Task1-4)</li>
+<li>多任务多线程 （Task1-1 Task1-2 Task1-3 Task1-4)(Task2-1 Task2-2)(Task3)(Task4)</li>
+</ul>
+<p><strong>线程的数量最好是CPU核的倍数</strong></p>
+<h5 id="如何安全的使用多线程"><a href="#如何安全的使用多线程" class="headerlink" title="如何安全的使用多线程"></a>如何安全的使用多线程</h5><p><strong>多线程的问题：线程安全和非线程安全</strong></p>
+<p><strong>1、线程与数据/资源</strong></p>
+<p>因为每一个线程都会访问到数据，而数据不做手段保护，就有可能会出现数据混乱(因为数据是在多个线程中共享的)，而在Unity中把所有于逻辑相关的东西，强制必须都是在单线程内，其他线程不访问，在底层做了一层防范，保证所有的事情是在一个线程内发生，就不会出现这种情况。</p>
+<p><strong>同步与锁</strong></p>
+<p>用于同步的对象 当你考虑好你的线程方案后，会有各种锁选择</p>
+<h6 id="1-lock"><a href="#1-lock" class="headerlink" title="1.lock"></a>1.<strong>lock</strong></h6><p>最暴力简单，使用起来没什么成本，但加锁后可能会有性能问题。使后进入的线程不会中断当前的线程，而是等待当前线程结束后再继续执行。</p>
+<h6 id="2-Monitor（对象）"><a href="#2-Monitor（对象）" class="headerlink" title="2.Monitor（对象）"></a>2.<strong>Monitor（对象）</strong></h6><p>属于lock的底层 更加开放 lock是对Monitor的Enter和Exit的一个封装，因此Monitor类的Enter()和Exit()方法的组合使用可以用lock关键字替代。</p>
+<p>Monitor类除了具有lock的功能外，还有以下功能：</p>
+<p>TryEnter()解决长期死等的问题，如果一个并发经常发生，并且持续时间很长，使用TryEnter，可以有效防止死锁或者长时间 的等待。  </p>
+<p>Wait()释放对象上的锁，以便允许其他线程锁定和访问该对象。在其他线程访问对象时，调用线程将等待。脉冲信号用于通知等待线程有关对象状态的更改。</p>
+<p>Pulse(),PulseAll()向一个或多个等待线程发送信号。该信号通知等待线程锁定对象的状态已更改，并且锁的所有者准备释放该锁。等待线程被放置在对象的就绪队列中以便它可以最后接收对象锁。一旦线程拥有了锁，它就可以检查对象的新状态以查看是否达到所需状态。</p>
+<p>注意：Pulse、PulseAll和Wait方法必须从同步的代码块内调用。</p>
+<h6 id="3-Mutex-（互斥）"><a href="#3-Mutex-（互斥）" class="headerlink" title="3.Mutex （互斥）"></a>3.<strong>Mutex （互斥）</strong></h6><p>Mutex的突出特点是可以跨应用程序域边界对资源进行独占访问，即可以用于同步不同进程中的线程，这种功能是以牺牲更多的系统资源为代价的。  </p>
+<p>互斥体Mutex和事件对象EventWaitHandler属于内核对象，利用内核对象进行线程同步，线程必须要在用户模式和内核模式间切换，所以一般效率很低，但利用互斥对象和事件对象这样的内核对象，可以在多个进程中的各个线程间进行同步。</p>
+<p>互斥体Mutex类似于一个接力棒，拿到接力棒的线程才可以开始跑，当然接力棒一次只属于一个线程(Thread Affinity)，如果这个线程不释放接力棒(Mutex.ReleaseMutex)，那么其他所有需要接力棒运行的线程只能等着看热闹</p>
+<h6 id="4、ReaderWriterLockSlim（多线程读单线程写）"><a href="#4、ReaderWriterLockSlim（多线程读单线程写）" class="headerlink" title="4、ReaderWriterLockSlim（多线程读单线程写）**"></a>4、ReaderWriterLockSlim（多线程读单线程写）**</h6><p>当线程A已经获取到ReaderWriterLockSlim实例的读锁（RedLock,UpgradeableReaLock）后，其它线程只能再获取到该ReaderWriterLockSlim实例的读锁，再申请获取写锁会被阻塞</p>
+<p>当线程A已获取到ReaderWriterLockSlim实例的写锁后，其它线程再申请获取到该ReaderWriterLockSlim实例的写锁和读锁时会被阻塞，直到线程A释放写锁</p>
+<p>注意事项</p>
+<p>（1）线程A如果通过EnterReadLock获取到读锁（ReadLock）后，不能在持有读锁的情况下再申请获取写锁（WriteLock）</p>
+<p>如果违反了这个规定就报如下错：<br>Write lock may not be acquired with read lock held. This pattern is prone to deadlocks. Please ensure that read locks are released before taking a write lock. If an upgrade is necessary, use an upgrade lock in place of the read lock.</p>
+<p>（2）线程A如果通过EnterReadLock获取到读锁（ReadLock）后，不能在持有读锁的情况下再申请获取可升级读锁（UpgradeableReadLock）</p>
+<p>如果违反了这个规定就报如下错：<br>Upgradeable lock may not be acquired with read lock held</p>
+<p>（3）线程A如果通过EnterUpgradeableReadLock获取到可升级读锁（UpgradeableReadLockk）后，可以再持有可升级读锁的情况通过EnterWriteLock获取写锁</p>
+<h6 id="5-Semaphore（信号量）"><a href="#5-Semaphore（信号量）" class="headerlink" title="5.Semaphore（信号量）"></a>5.<strong>Semaphore</strong>（信号量）</h6><p>可理解为允许线程执行信号的池子，池子中放入多少个信号就允许多少线程同时执行。</p>
+<p>说明：</p>
+<p>1、如果semaphore.Release(n)，n&gt;semaphore最大容纳信号量，将出异常。<br>2、当semaphore拥有的信号量为1时，Semaphore相当于Mutex<br>3、当semaphore拥有的信号量&gt;1时，信号量的数量即可供多个线程同时获取的个数，此时可认为获取到信号量的线程将同时执行（实际情况可能与CPU核心数、CPU同时支出线程数有关）</p>
+<p>在调控线程的资源方面更加的灵活</p>
+<h6 id="6、Interlocked（原子锁）"><a href="#6、Interlocked（原子锁）" class="headerlink" title="6、Interlocked（原子锁）"></a>6、Interlocked（原子锁）</h6><p>提供对变量快速操作的一种方式 从而实现线程的同步</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/2018102683411413.png" srcset="/img/loading.gif" lazyload alt="2018102683411413.png"></p>
+<h5 id="同步的范围"><a href="#同步的范围" class="headerlink" title="同步的范围"></a>同步的范围</h5><p>对象 如：对列表加锁，列表所有的增删改都等待。</p>
+<p>操作 如：只写读操作和写操作</p>
+<p>变量 如：原子锁 锁定的级别越小 影响的范围越小</p>
+<p><strong>只在必要时候加锁，加锁的力度越小越好</strong></p>
 
             </div>
             <hr>
@@ -293,7 +308,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Unity/">Unity</a>
+                      <a class="hover-with-bg" href="/categories/CSharp/">CSharp</a>
                     
                   </div>
                 
@@ -301,9 +316,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Unity/">Unity</a>
+                      <a class="hover-with-bg" href="/tags/CSharp/">CSharp</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E8%8A%B1%E9%87%8C%E8%83%A1%E5%93%A8/">花里胡哨</a>
+                      <a class="hover-with-bg" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
                     
                   </div>
                 
@@ -320,18 +335,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/12/23/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">多线程和线程安全</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/12/23/CSharp%E9%AB%98%E7%BA%A7/">
-                        <span class="hidden-mobile">CSharp高级</span>
+                      <a href="/2021/12/23/Unity-InstantOC/">
+                        <span class="hidden-mobile">Unity InstantOC</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
