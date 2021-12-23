@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Heart">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="粘包和拆包 解决方法拆包 粘包当客户端向服务器连续发送两个数据包后，服务端接收数据可以分成三种情况 一、服务端正常的收到这两个数据包 没有发生粘包和拆包的情况 二、服务端只接收到一个数据包 ，而TCP是不会发生丢包的情况的，所以这一个数据包就包含了客户端发送的两个数据包 这就被称为粘包。 发送的时候，数据是有一个数据缓冲区的，比如数据缓冲区是200，我们一个包是100 就会把缓冲区填满，填满之后呢">
+<meta property="og:type" content="article">
+<meta property="og:title" content="粘包和拆包">
+<meta property="og:url" content="https://shyheart.github.io/2021/12/23/%E7%B2%98%E5%8C%85%E5%92%8C%E6%8B%86%E5%8C%85/index.html">
+<meta property="og:site_name" content="Heart Signal">
+<meta property="og:description" content="粘包和拆包 解决方法拆包 粘包当客户端向服务器连续发送两个数据包后，服务端接收数据可以分成三种情况 一、服务端正常的收到这两个数据包 没有发生粘包和拆包的情况 二、服务端只接收到一个数据包 ，而TCP是不会发生丢包的情况的，所以这一个数据包就包含了客户端发送的两个数据包 这就被称为粘包。 发送的时候，数据是有一个数据缓冲区的，比如数据缓冲区是200，我们一个包是100 就会把缓冲区填满，填满之后呢">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.oschina.net/uploads/space/2018/0315/123125_1LCT_3318187.jpg">
+<meta property="article:published_time" content="2021-12-23T03:15:45.000Z">
+<meta property="article:modified_time" content="2021-12-23T03:24:55.421Z">
+<meta property="article:author" content="Heart">
+<meta property="article:tag" content="花里胡哨">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="Socket">
+<meta property="article:tag" content="CSharp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://static.oschina.net/uploads/space/2018/0315/123125_1LCT_3318187.jpg">
+  
+  
+  <title>粘包和拆包 - Heart Signal</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"shyheart.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Heart Signal</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/dojm2h.png?w=1920&q=100&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="粘包和拆包">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Heart
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 11:15" pubdate>
+        2021年12月23日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">粘包和拆包</h1>
+            
+            <div class="markdown-body">
+              <h1 id="粘包和拆包-解决方法"><a href="#粘包和拆包-解决方法" class="headerlink" title="粘包和拆包 解决方法"></a>粘包和拆包 解决方法</h1><h2 id="拆包-粘包"><a href="#拆包-粘包" class="headerlink" title="拆包 粘包"></a>拆包 粘包</h2><p>当客户端向服务器连续发送两个数据包后，服务端接收数据可以分成三种情况</p>
+<p>一、服务端正常的收到这两个数据包 没有发生粘包和拆包的情况</p>
+<p>二、服务端只接收到一个数据包 ，而TCP是不会发生丢包的情况的，所以这一个数据包就包含了客户端发送的两个数据包 这就被称为粘包。</p>
+<p>发送的时候，数据是有一个数据缓冲区的，比如数据缓冲区是200，我们一个包是100 就会把缓冲区填满，填满之后呢 我们数据缓冲区就会把这个包发送出去，这两个包呢就会被粘在一起，合并成了一个发送。相当于我们人发快递，发送两根笔，一根笔是一份快递钱，那么我们就会把两根笔合成一份快递发送。而缓冲区呢，当第一次没有填满，那么它就会等到填满了，一块往服务端发送，这样就出现粘包的问题。</p>
+<p>三、服务端接收到了两个数据包，但是这两个数据包，会出现要么不完整，或者多出来一部分的情况，这种情况呢就是发生了拆包和粘包。</p>
+<p>就相当于在数据缓冲区中，我们数据缓冲区是200，而我们一个包的长度呢是150 这时候进入缓冲区，而缓冲区没有被填满，就会等待填满，而缓冲区填满后就出现了另外一个数据包不全的情况 一个数据包多出了一部分 这就是发生了拆包和粘包</p>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>粘包、拆包发生原因 （常见几种）</p>
+<ol>
+<li><p>要发送的数据大于TCP发送缓冲区剩余空间大小，将会发生拆包。</p>
+</li>
+<li><p>待发送数据大于最大报文长度，TCP在传输前将进行拆包。</p>
+</li>
+<li><p>要发送的数据小于TCP发送缓冲区的大小，TCP将多次写入缓冲区的数据一次发送出去，将会发生粘包。</p>
+</li>
+<li><p>接收数据端的应用层没有及时读取接收缓冲区中的数据，将发生粘包。</p>
+</li>
+</ol>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>发送端给每一个数据包构造一个包头与包尾，包头内包含了数据包的长度，包尾才是真正的数据包 当接收端接收到数据包后，首先先读取数据包的前四个字节（int值只占四个字节）拿到数据包的长度后，再往后依次读取我们的数据包。</p>
+<h2 id="构造包和解析包"><a href="#构造包和解析包" class="headerlink" title="构造包和解析包"></a>构造包和解析包</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs c#">using System;<br>using System.Collections.Generic;<br>using System.IO;<br>using System.Linq;<br>using System.Text;<br>using System.Threading.Tasks;<br><br>namespace MyServer<br>&#123;<br>    /// &lt;summary&gt;<br>    /// /构造包 包头+包尾<br>    /// &lt;/summary&gt;<br>   public class EncodeTool<br>    &#123;<br>        public static byte[] EncodePacket(byte[] data)<br>        &#123;<br>            using (MemoryStream ms = new MemoryStream())<br>            &#123;<br>                using (BinaryWriter bw=new BinaryWriter(ms))<br>                &#123;<br>                    //写入包头（数据的长度）<br>                    bw.Write(data.Length);<br>                    //写入包尾（数据）<br>                    bw.Write(data);<br>                    byte[] packet = new byte[ms.Length];<br>                    Buffer.BlockCopy(ms.GetBuffer(), 0, packet, 0, (int)ms.Length);<br>                    return packet;<br>                &#125;<br>            &#125;<br>        &#125;<br>        /// &lt;summary&gt;<br>        /// /解析包，从缓冲区里取出一个完整的包<br>        /// &lt;/summary&gt;<br>        /// &lt;param name=&quot;cache&quot;&gt;&lt;/param&gt;<br>        /// &lt;returns&gt;&lt;/returns&gt;<br><br>        public static byte[] DecodePacket(ref List&lt;byte&gt; cache)<br>        &#123;<br>            //如果数据长度小于四个字节，说明没有包<br>            if (cache.Count &lt; 4)<br>            &#123;<br>                return null;<br>            &#125;<br>            using (MemoryStream ms=new MemoryStream(cache.ToArray()))<br>            &#123;<br>                using(BinaryReader br=new BinaryReader(ms))<br>                &#123;<br>                    //读取包的长度<br>                    int length = br.ReadInt32();<br>                    //当前的长度减去，读取字节后游标的长度，就是包的数据 <br>                    int remainLength = (int)(ms.Length - ms.Position);<br>                    if (length &gt; remainLength)<br>                    &#123;<br>                        //如果大于减去后的长度麻将构不能一个包<br>                        return null;<br>                    &#125;<br>                    byte[] data = br.ReadBytes(length);<br>                    //更新缓冲数据<br>                    cache.Clear();<br>                    cache.AddRange(br.ReadBytes(remainLength));<br>                    return data;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CSharp/">CSharp</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%8A%B1%E9%87%8C%E8%83%A1%E5%93%A8/">花里胡哨</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Socket/">Socket</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CSharp/">CSharp</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/23/C-Socket%E8%BF%9E%E6%8E%A5/">
+                        <span class="hidden-mobile">C#Socket连接</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

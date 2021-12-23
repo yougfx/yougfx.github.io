@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Heart">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Unity性能优化 CPU GPU 内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity性能优化">
+<meta property="og:url" content="https://shyheart.github.io/2021/12/23/Unity-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Heart Signal">
+<meta property="og:description" content="Unity性能优化 CPU GPU 内存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223110056.png">
+<meta property="article:published_time" content="2021-12-23T02:29:01.000Z">
+<meta property="article:modified_time" content="2021-12-23T03:01:11.210Z">
+<meta property="article:author" content="Heart">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="花里胡哨">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223110056.png">
+  
+  
+  <title>Unity性能优化 - Heart Signal</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"shyheart.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Heart Signal</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/dojm2h.png?w=1920&q=100&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Unity性能优化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Heart
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-23 10:29" pubdate>
+        2021年12月23日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Unity性能优化</h1>
+            
+            <div class="markdown-body">
+              <h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><h4 id="性能优化-CPU"><a href="#性能优化-CPU" class="headerlink" title="性能优化-CPU"></a>性能优化-CPU</h4><p><strong>干扰 内部与外部</strong></p>
+<p>内部：Profiler，Vertical Sync（垂直同步），Log output 凹操作性能耗费很高</p>
+<p>外部：CPU 内存 IO</p>
+<p><strong>工具</strong></p>
+<p><strong>Unity Profiler</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211213161040737.png" srcset="/img/loading.gif" lazyload alt="image20211213161040737"></p>
+<p><strong>Custom Profiler</strong>（自定义的Profiler）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c#">private void Update()<br>&#123;<br>    CustomProfrile();<br>&#125;<br><br>void CustomProfrile()<br>&#123;<br>    UnityEngine.Profiling.Profiler.BeginSample(&quot;CustomProfrile&quot;);<br>    for (int i = 0; i &lt; 100; i++)<br>    &#123;<br>        CustomFunction();<br>    &#125;<br>    UnityEngine.Profiling.Profiler.EndSample();<br>&#125;<br><br>private void CustomFunction()<br>&#123;<br>    UnityEngine.Profiling.Profiler.BeginSample(&quot;CustomFunction&quot;);<br>    for (int i = 0; i &lt; 100; i++)<br>    &#123;<br>        CustomCale();<br>    &#125;<br>    UnityEngine.Profiling.Profiler.EndSample();<br>&#125;<br><br>private void CustomCale()<br>&#123;<br>    UnityEngine.Profiling.Profiler.BeginSample(&quot;CustomCale&quot;);<br>    float t = 100, f = 0f;<br>    for (int i = 0; i &lt; 100; i++)<br>    &#123;<br>        f += Mathf.Pow(Mathf.Sin(i), t);<br>    &#125;<br>    UnityEngine.Profiling.Profiler.EndSample();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>Timer&amp;Log</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs c#">public class ProTimer :IDisposable<br>&#123;<br>    private string name;<br>   private int times;<br>   private Stopwatch watch;<br><br>    public ProTimer(string name):this(name,0)&#123;<br><br>    &#125;<br>    public ProTimer(string name,int times)<br>    &#123;<br>        this.name=name;<br>        this.times=times;<br>        if(this.times&lt;=0)<br>            this.times=1;<br>        watch=Stopwatch.StartNew();<br>    &#125;<br><br>    public void Dispose()&#123;<br>        watch.Stop();<br>        float ms=watch.ElapsedMinlliseconds;<br>        if(times&gt;1)&#123;<br>            Debug.Debug.Log(string.Format(&quot;ProTimer : [&#123;0&#125;] finished: [&#123;1:0.00&#125;ms] total, [&#123;2:0.000000&#125;ms] per peroid for [&#123;3&#125;] times&quot;<br>            ,name ,ms,ms/timer,times));<br>        &#125;<br>        else<br>            Debug.Debug.Log(string.Format(&quot;ProTimer : [&#123;0&#125;] finished: [&#123;1:0.00&#125;ms] total&quot;,name,ms ));<br><br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="CPU优化要点"><a href="#CPU优化要点" class="headerlink" title="CPU优化要点"></a>CPU优化要点</h5><p>CPU优化要点：Unity脚本最佳做法 数据结构优化 算法优化</p>
+<p><strong>Unity脚本最佳做法</strong></p>
+<ul>
+<li>Component的缓冲与获取</li>
+<li><strong>移除空声明</strong></li>
+<li>避免Find和SendMessage(大概比直接函数调用慢2000倍)</li>
+<li>禁止未使用的游戏脚本与对象 （生存周期 可见性 距离）</li>
+<li>对象池</li>
+</ul>
+<p>Component获取的三种方式</p>
+<ul>
+<li>(CompTest)Component(“Testcomponent”)</li>
+<li>GetComponent<CompTest>();</li>
+<li>(CompTest)GetComponent(typeof(CompTest))</li>
+</ul>
+<p>性能消耗</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211213202822084.png" srcset="/img/loading.gif" lazyload alt="image20211213202822084"></p>
+<p>避免Find和SendMessage-替代方案</p>
+<ul>
+<li>直接引用游戏对象</li>
+<li>静态类</li>
+<li>单例组件</li>
+<li>自定义消息系统</li>
+</ul>
+<p>性能分析注意事项</p>
+<ul>
+<li>分析第一，优化第二</li>
+<li>分析要透彻，避免一知半解盲目优化</li>
+<li>避免为性能分析增加过多临时代码</li>
+<li>增加的日志在头花完成及时移除</li>
+<li>尽量通过DeBug发现问题</li>
+</ul>
+<h4 id="性能优化-GPU"><a href="#性能优化-GPU" class="headerlink" title="性能优化-GPU"></a>性能优化-GPU</h4><p><strong>原理</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211213204405189.png" srcset="/img/loading.gif" lazyload alt="image20211213204405189"></p>
+<h6 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h6><p>Unity Profiler Frame Debug GPU Profiler</p>
+<h6 id="GPU优化要点"><a href="#GPU优化要点" class="headerlink" title="GPU优化要点"></a><strong>GPU优化要点</strong></h6><ul>
+<li>Drawcall</li>
+<li>Batching</li>
+<li>图集</li>
+<li>移动设备优化</li>
+</ul>
+<p>渲染对象关系</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211213205858211.png" srcset="/img/loading.gif" lazyload alt="image20211213205858211"></p>
+<p>Dynamic Batching</p>
+<ul>
+<li>所有Mesh实例具有相同的材质引用</li>
+<li>只有Partucle System和MeshRenderer可以动态批*（随Unity版本不同）</li>
+<li>Vertex Attribute总数必须小于900</li>
+<li>所有实例必须采用Uniform Scale或所有Mesh都采用Nonuniform Scale，不能混合使用。</li>
+<li>必须引用相同的LightMap</li>
+<li>材质Shader不用使用Multiple Passes</li>
+<li>Mesh实例不能接受实时阴影</li>
+<li>每个Batch最大300Mesh</li>
+<li>最多32000Mesh可以Batch</li>
+</ul>
+<p>Static Batching</p>
+<ul>
+<li>所有Mesh实例具有相同的材质引用</li>
+<li>所有Mesh必须标记为Static</li>
+<li>额外的内存占用</li>
+<li>静态对象无法通过原始的Transform移动</li>
+<li>任何一点可见，全部渲染</li>
+</ul>
+<p>移动设备优化要点</p>
+<ul>
+<li>最小的Drawcall</li>
+<li>最小的材质数量</li>
+<li>最小的纹理尺寸</li>
+<li>方形&amp;POT纹理</li>
+<li>Shader中使用尽可能低的数据类型</li>
+<li>避免Alpha测试</li>
+</ul>
+<h4 id="性能优化-内存"><a href="#性能优化-内存" class="headerlink" title="性能优化-内存"></a>性能优化-内存</h4><h6 id="内存占用优化"><a href="#内存占用优化" class="headerlink" title="内存占用优化"></a>内存占用优化</h6><p>分析工具 <strong>Unity Profiler</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216194107133.png" srcset="/img/loading.gif" lazyload alt="image20211216194107133"></p>
+<p>除此之外，unity还有另外一个更加直观的工具</p>
+<p><strong>Memory Profiler</strong> (开源库之中)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216194721571.png" srcset="/img/loading.gif" lazyload alt="image20211216194721571"></p>
+<h6 id="Unity占用组成"><a href="#Unity占用组成" class="headerlink" title="Unity占用组成"></a><strong>Unity占用组成</strong></h6><ul>
+<li><p>Unity</p>
+</li>
+<li><p>Mono</p>
+</li>
+<li><p>GfxDriver(显卡驱动消耗的内存)</p>
+</li>
+<li><p>FMOD（音频引擎）</p>
+</li>
+<li><p>细分(Texture Mesh Animation Shader Font)</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216211225511.png" srcset="/img/loading.gif" lazyload alt="image20211216211225511"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216212601027.png" srcset="/img/loading.gif" lazyload alt="image20211216212601027"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216212655362.png" srcset="/img/loading.gif" lazyload alt="image20211216212655362"></p>
+</li>
+</ul>
+<h6 id="GC优化"><a href="#GC优化" class="headerlink" title="GC优化"></a>GC优化</h6><p>GC 内存堆栈 垃圾回收</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/265217138">https://zhuanlan.zhihu.com/p/265217138</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216213311223.png" srcset="/img/loading.gif" lazyload alt="image20211216213311223"></p>
+<p>优化要点</p>
+<ul>
+<li>减少频繁的对象创建</li>
+<li>避免装箱</li>
+<li>善用缓存<br><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211216213529292.png" srcset="/img/loading.gif" lazyload alt="image-20211216213529292"></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Unity/">Unity</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Unity/">Unity</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%8A%B1%E9%87%8C%E8%83%A1%E5%93%A8/">花里胡哨</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/23/Unity-%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Unity-资源优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
