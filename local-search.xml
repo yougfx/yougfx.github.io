@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Unity资源统一加载</title>
+    <link href="/2021/12/25/Unity%E8%B5%84%E6%BA%90%E7%BB%9F%E4%B8%80%E5%8A%A0%E8%BD%BD/"/>
+    <url>/2021/12/25/Unity%E8%B5%84%E6%BA%90%E7%BB%9F%E4%B8%80%E5%8A%A0%E8%BD%BD/</url>
+    
+    <content type="html"><![CDATA[<h4 id="资源类型及加载方式"><a href="#资源类型及加载方式" class="headerlink" title="资源类型及加载方式"></a>资源类型及加载方式</h4><p>1.Resources 直接使用Resource.Load 可以直接加载到资源</p><p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20211225161613673.png" alt="image-20211225161613673"></p><p>2.Asset Bundles 做打包更新必须需要使用的方式</p><div class="table-container"><table><thead><tr><th><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadFromMemory.html">AssetBundle.LoadFromMemory</a> 从内存加载，多用在需要严谨的等待逻辑执行完，并且中间不做其他事情</th></tr></thead><tbody><tr><td><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadFromMemoryAsync.html">AssetBundle.LoadFromMemoryAsync</a> 从内存区域异步创建 AssetBundle</td></tr><tr><td><a href="https://docs.unity3d.com/2018.4/Documentation/ScriptReference/AssetBundle.LoadFromFile.html">AssetBundle.LoadFromFile</a> 从硬盘上的文件上加载 支持任何压缩类型的包</td></tr><tr><td><a href="https://docs.unity3d.com/2018.4/Documentation/ScriptReference/AssetBundle.LoadFromFileAsync.html">AssetBundle.LoadFromFileAsync</a> 异步</td></tr><tr><td><a href="https://docs.unity3d.com/2018.4/Documentation/ScriptReference/AssetBundle.LoadFromStream.html">AssetBundle.LoadFromStream</a> 流的方式 边下载边加载 只要是基于流的数据都能创建Bundle 对于要在网络实时加载 最优选择</td></tr><tr><td><a href="https://docs.unity3d.com/2018.4/Documentation/ScriptReference/AssetBundle.LoadFromStreamAsync.html">AssetBundle.LoadFromStreamAsync</a></td></tr></tbody></table></div><p>3.Raw(Image\Movie) 直接在编辑器或者运行场景中放置的</p><h4 id="Unity资源加载需求"><a href="#Unity资源加载需求" class="headerlink" title="Unity资源加载需求"></a>Unity资源加载需求</h4><p>分析</p><ul><li>发布平台。每一个发布平台的加载情况都不相同</li><li>动态更新/流式加载 将运行必须的基础数据放到一个包上 其他内容放到另外一个包上</li><li>压缩加密</li><li>自定义数据包</li></ul><p>关键因数</p><p> Unity资源路径</p><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/20211225190828.png" alt=""></p><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/20211225190953.png" alt=""></p><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211225191023675.png" alt="image-20211225191023675"></p><h4 id="Unity资源加载模块设计"><a href="#Unity资源加载模块设计" class="headerlink" title="Unity资源加载模块设计"></a>Unity资源加载模块设计</h4><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211225191902634.png" alt="image-20211225191902634"></p><p><strong>流程设计</strong></p><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211225192548982.png" alt="image-20211225192548982"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Unity</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Unity</tag>
+      
+      <tag>花里胡哨</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Unity AssetBundle</title>
     <link href="/2021/12/24/%E8%B5%84%E6%BA%90%E6%89%93%E5%8C%85/"/>
     <url>/2021/12/24/%E8%B5%84%E6%BA%90%E6%89%93%E5%8C%85/</url>
