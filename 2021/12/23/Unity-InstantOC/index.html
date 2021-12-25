@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20211223201904.png">
 <meta property="article:published_time" content="2021-12-23T12:17:21.000Z">
-<meta property="article:modified_time" content="2021-12-23T13:00:54.573Z">
+<meta property="article:modified_time" content="2021-12-25T08:00:07.018Z">
 <meta property="article:author" content="Heart">
 <meta property="article:tag" content="Unity">
 <meta property="article:tag" content="花里胡哨">
@@ -281,7 +281,7 @@
 <p><em>注意：不设置碰撞器射线射不到。</em></p>
 <p><strong><em>遮挡剔除优点：减少渲染量。  （功能上没有损失）  缺点：CPU（射线）需要消耗额外性能</em></strong></p>
 <p><strong><em>场景里物体较多且分布较密集（被遮挡的物体多）时使用遮挡剔除。</em></strong></p>
-<h2 id="三、LOD"><a href="#三、LOD" class="headerlink" title="三、LOD"></a><em>三、</em>LOD</h2><p>  LOD（<strong>Level of Detail</strong>多细节层次）：指根据物体模型的节点在显示环境中所处的位置和重要度，决定物体渲染的资源分配，降低非重要物体的面数和细节度，从而获得高效率的渲染运算。 不会降低draw call</p>
+<h2 id="三、LOD"><a href="#三、LOD" class="headerlink" title="三、LOD"></a>三、LOD</h2><p>  LOD（<strong>Level of Detail</strong>多细节层次）：指根据物体模型的节点在显示环境中所处的位置和重要度，决定物体渲染的资源分配，降低非重要物体的面数和细节度，从而获得高效率的渲染运算。 不会降低draw call</p>
 <p><strong>优点：降低非重要物体的面数与精度，从而获得高效率的渲染运算</strong>  </p>
 <p> 缺点：CPU总需要判断距离，变换模型</p>
 <p>适用性：1场景中需要存在高精度模型  2.距离需要变化</p>

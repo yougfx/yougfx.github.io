@@ -19,7 +19,7 @@
     <meta name="description" content="OSI TCP UDP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C#Socket连接">
-<meta property="og:url" content="https://shyheart.github.io/2021/12/23/C-Socket%E8%BF%9E%E6%8E%A5/index.html">
+<meta property="og:url" content="https://shyheart.github.io/2021/12/23/C#Socket%E8%BF%9E%E6%8E%A5/index.html">
 <meta property="og:site_name" content="Heart Signal">
 <meta property="og:description" content="OSI TCP UDP">
 <meta property="og:locale" content="zh_CN">
@@ -227,7 +227,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.3k 字
+      3.4k 字
     </span>
   
 
@@ -287,13 +287,109 @@
 <li><p>实现客服给客户发消息</p>
 </li>
 </ol>
-<h3 id="代码如下"><a href="#代码如下" class="headerlink" title="代码如下"></a>代码如下</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs c#">using System;<br>using System.Net;<br>using System.Net.Sockets;<br>using System.Text;<br><br>namespace SocketDemo<br>&#123;<br>    class Program<br>    &#123;<br>        static void Main(string[] args)<br>        &#123;<br>            //创建Socket 相当于是通信的主机<br>            //监听打进来的电话，并转接给客服<br>            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);<br><br>            //绑定ip和端口<br>            EndPoint iped = IPEndPoint.Parse(&quot;192.168.43.227:1234&quot;);<br>            serverSocket.Bind(iped);<br><br>            //监听有没有电话连接，顺便规划客服人数,如果是0就是无限个客服<br>            serverSocket.Listen(100);<br><br>            //接电话<br>            //分配客服和客户进行一对一通信<br>            //阻塞方法 没有电话打进来，那么代码就执行到这里 Accept<br>            Socket kefuScoket = serverSocket.Accept();<br>            System.Console.WriteLine(&quot;客户的本地端口是：&quot; + kefuScoket.LocalEndPoint.ToString());<br>            System.Console.WriteLine(&quot;打电话进来的客户端是：&quot; + kefuScoket.RemoteEndPoint.ToString());<br><br>            //接消息，需要一个消息的缓冲区<br>            byte[] readBuff = new byte[1024];<br><br>            while (true)<br>            &#123;<br>                //消息拿到，并存放在缓冲区，并记住消息的长度<br>                int receiveCount = kefuScoket.Receive(readBuff);<br>                string receiveMessage = Encoding.UTF8.GetString(readBuff, 0, receiveCount);<br>                System.Console.WriteLine(&quot;客户端发过来的消息：&quot; + receiveMessage);<br><br>                //string backMessage = &quot;我是你的专属客服，有什么可以帮助你的&quot;;<br>                kefuScoket.Send(Encoding.UTF8.GetBytes(&quot;服务器已经接到你发来的消息：&quot; + receiveMessage));<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h3 id="代码如下"><a href="#代码如下" class="headerlink" title="代码如下"></a>代码如下</h3><div class="code-wrapper"><pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+
+namespace SocketDemo
+&#123;
+    class Program
+    &#123;
+        static void Main(string[] args)
+        &#123;
+            &#x2F;&#x2F;创建Socket 相当于是通信的主机
+            &#x2F;&#x2F;监听打进来的电话，并转接给客服
+            Socket serverSocket &#x3D; new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            &#x2F;&#x2F;绑定ip和端口
+            EndPoint iped &#x3D; IPEndPoint.Parse(&quot;192.168.43.227:1234&quot;);
+            serverSocket.Bind(iped);
+
+            &#x2F;&#x2F;监听有没有电话连接，顺便规划客服人数,如果是0就是无限个客服
+            serverSocket.Listen(100);
+
+            &#x2F;&#x2F;接电话
+            &#x2F;&#x2F;分配客服和客户进行一对一通信
+            &#x2F;&#x2F;阻塞方法 没有电话打进来，那么代码就执行到这里 Accept
+            Socket kefuScoket &#x3D; serverSocket.Accept();
+            System.Console.WriteLine(&quot;客户的本地端口是：&quot; + kefuScoket.LocalEndPoint.ToString());
+            System.Console.WriteLine(&quot;打电话进来的客户端是：&quot; + kefuScoket.RemoteEndPoint.ToString());
+
+            &#x2F;&#x2F;接消息，需要一个消息的缓冲区
+            byte[] readBuff &#x3D; new byte[1024];
+
+            while (true)
+            &#123;
+                &#x2F;&#x2F;消息拿到，并存放在缓冲区，并记住消息的长度
+                int receiveCount &#x3D; kefuScoket.Receive(readBuff);
+                string receiveMessage &#x3D; Encoding.UTF8.GetString(readBuff, 0, receiveCount);
+                System.Console.WriteLine(&quot;客户端发过来的消息：&quot; + receiveMessage);
+
+                &#x2F;&#x2F;string backMessage &#x3D; &quot;我是你的专属客服，有什么可以帮助你的&quot;;
+                kefuScoket.Send(Encoding.UTF8.GetBytes(&quot;服务器已经接到你发来的消息：&quot; + receiveMessage));
+            &#125;
+        &#125;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
 <h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><ol>
 <li>建立Socket</li>
 <li>Connect连接服务端</li>
 <li>try catch语句 捕捉异常</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs c#">using System;<br>using System.Net;<br>using System.Net.Sockets;<br>using System.Text;<br><br>namespace clientSocket<br>&#123;<br>    class Program<br>    &#123;<br>        static void Main(string[] args)<br>        &#123;<br>            Console.WriteLine(&quot;Hello World!&quot;);<br><br>            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);<br>            //接收服务器的回馈<br>            byte[] readBuff = new byte[1024];<br><br>            //连接服务器<br>            clientSocket.Connect(&quot;192.168.43.227&quot;, 1234);<br><br>            //连接上服务器，就能发消息<br>            string sendMessage;<br><br>            //计数器<br>            int num = 0;<br><br>            while (true)<br>            &#123;<br>                if (num == 0)<br>                &#123;<br>                    sendMessage = &quot;你好，我是192用户&quot;;<br>                    num++;<br>                &#125;<br>                else<br>                &#123;<br>                    sendMessage = Console.ReadLine();<br>                &#125;<br><br>                //转码，转成0101010的格式<br>                byte[] sendBytes = Encoding.UTF8.GetBytes(sendMessage);<br><br>                //把二进制的消息发出去<br>                clientSocket.Send(sendBytes);<br>                int count = clientSocket.Receive(readBuff);<br>                System.Console.WriteLine(&quot;服务器发送的消息是：&quot; + Encoding.UTF8.GetString(readBuff, 0, count));<br><br>            &#125;<br><br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+
+namespace clientSocket
+&#123;
+    class Program
+    &#123;
+        static void Main(string[] args)
+        &#123;
+            Console.WriteLine(&quot;Hello World!&quot;);
+
+            Socket clientSocket &#x3D; new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            &#x2F;&#x2F;接收服务器的回馈
+            byte[] readBuff &#x3D; new byte[1024];
+
+            &#x2F;&#x2F;连接服务器
+            clientSocket.Connect(&quot;192.168.43.227&quot;, 1234);
+
+            &#x2F;&#x2F;连接上服务器，就能发消息
+            string sendMessage;
+
+            &#x2F;&#x2F;计数器
+            int num &#x3D; 0;
+
+            while (true)
+            &#123;
+                if (num &#x3D;&#x3D; 0)
+                &#123;
+                    sendMessage &#x3D; &quot;你好，我是192用户&quot;;
+                    num++;
+                &#125;
+                else
+                &#123;
+                    sendMessage &#x3D; Console.ReadLine();
+                &#125;
+
+                &#x2F;&#x2F;转码，转成0101010的格式
+                byte[] sendBytes &#x3D; Encoding.UTF8.GetBytes(sendMessage);
+
+                &#x2F;&#x2F;把二进制的消息发出去
+                clientSocket.Send(sendBytes);
+                int count &#x3D; clientSocket.Receive(readBuff);
+                System.Console.WriteLine(&quot;服务器发送的消息是：&quot; + Encoding.UTF8.GetString(readBuff, 0, count));
+
+            &#125;
+
+        &#125;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
 <h4 id="C-Socket各种类"><a href="#C-Socket各种类" class="headerlink" title="C#Socket各种类"></a>C#Socket各种类</h4><p>一、IP地址操作类</p>
 <p>1、IPAddress类</p>
 <p>在该类中有一个Parse()方法，可以把点分的十进制转换成IPAddress类，方法1如下：IPAddress address=IPAddress.Parse(“192.168.0.1”);</p>
