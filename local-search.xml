@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>MongoDB</title>
+    <link href="/2021/12/28/MongoDB/"/>
+    <url>/2021/12/28/MongoDB/</url>
+    
+    <content type="html"><![CDATA[<h4 id="MongoDB与关系型数据库术语对比"><a href="#MongoDB与关系型数据库术语对比" class="headerlink" title="MongoDB与关系型数据库术语对比"></a>MongoDB与关系型数据库术语对比</h4><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/%E5%AF%B9%E6%AF%94.png" alt></p><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211228161831708.png" alt="image-20211228161831708"></p><div class="table-container"><table><thead><tr><th>SQl术语概念</th><th>MongoDB术语概念</th></tr></thead><tbody><tr><td>database(数据库)</td><td>database(数据库)</td></tr><tr><td>table(表)</td><td>collection(集合)</td></tr><tr><td>row（行）</td><td>document or BSON document（文档）</td></tr><tr><td>column（列）</td><td>field（字段）</td></tr><tr><td>index（索引）</td><td>index（索引）</td></tr><tr><td>table joins（表连接）</td><td>embedded documents and linking（嵌入的文档和连接）</td></tr><tr><td>primary key Specify any unique column or column combination as primary key（指定任意唯一的列或列组合作为主键）</td><td>primary keyin MongoDB，the primary key isautomatically set to the _id field(在MongoDB中，主键被自动设置为_id字段)</td></tr><tr><td>aggregation（e g.group by）</td><td>MongoDB provides thre ways to perfoem aggergation the aggregation pipeline the map-reduce function and songle purpose aggregation methods (聚合操作)</td></tr></tbody></table></div><h4 id="MongoDB数据类型"><a href="#MongoDB数据类型" class="headerlink" title="MongoDB数据类型"></a>MongoDB数据类型</h4><p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/20211228163210.png" alt></p><h4 id="NoSql的优缺点"><a href="#NoSql的优缺点" class="headerlink" title="NoSql的优缺点"></a>NoSql的优缺点</h4><p>优点</p><ul><li>高可扩展性</li><li>没有标准化</li><li>分布式计算</li><li>有限的查询功能</li><li>低成本</li></ul><p>缺点</p><ul><li>最终一致是不直观的程序</li><li>架构的灵活，半结构化数据</li><li>没有复杂的关系</li></ul><p>总结</p><p>NoSQL数据库在以下几种情况下比较适用</p><ul><li>数据模型比较简单</li><li>需要灵活性更强的IT系统</li><li>对数据库性能要求较高</li><li>不需要高度的数据一致性</li><li>对于给定的Key，比较容易映射复杂值的环境</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Other</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>花里胡哨</tag>
+      
+      <tag>NoSQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Unity资源统一加载</title>
     <link href="/2021/12/25/Unity%E8%B5%84%E6%BA%90%E7%BB%9F%E4%B8%80%E5%8A%A0%E8%BD%BD/"/>
     <url>/2021/12/25/Unity%E8%B5%84%E6%BA%90%E7%BB%9F%E4%B8%80%E5%8A%A0%E8%BD%BD/</url>
