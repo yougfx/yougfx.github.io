@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Heart">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ILRuntime 热更新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ILRuntime代码热更">
+<meta property="og:url" content="https://shyheart.github.io/2021/12/30/ILRuntime%E4%BB%A3%E7%A0%81%E7%83%AD%E6%9B%B4/index.html">
+<meta property="og:site_name" content="Heart Signal">
+<meta property="og:description" content="ILRuntime 热更新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/qfengly/image-bed/raw/master/Image/20211230145248.png">
+<meta property="article:published_time" content="2021-12-30T06:48:24.000Z">
+<meta property="article:modified_time" content="2021-12-30T12:56:09.089Z">
+<meta property="article:author" content="Heart">
+<meta property="article:tag" content="CSharp">
+<meta property="article:tag" content="ILRuntime">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gitee.com/qfengly/image-bed/raw/master/Image/20211230145248.png">
+  
+  
+  <title>ILRuntime代码热更 - Heart Signal</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"shyheart.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Heart Signal</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/dojm2h.png?w=1920&q=100&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ILRuntime代码热更">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Heart
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-30 14:48" pubdate>
+        2021年12月30日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ILRuntime代码热更</h1>
+            
+            <div class="markdown-body">
+              <h3 id="1-HelloWord"><a href="#1-HelloWord" class="headerlink" title="1.HelloWord"></a>1.HelloWord</h3><p>将ILRuntime导入在Console中发现大量CS0227报错，那么在Player设置中打开允许不安全代码选项（ILRuntime中使用了指针等不安全代码），如此报错信息就解决了， 随后在Demo目录下有一个HotFix_Project~文件夹  这个文件夹以~结尾，Unity会忽略掉它。打开HotFix这个项目，生成解决方案，还有报错的话就回到Unity 将 .Net.2.0改成4x。再生成解决方案。</p>
+<p>Unity会生成一个 文件</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/StreamingAssets.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>同时我们在HotFix这个项目内新建一个HotFixHelloWorld的类</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">
+
+namespace HotFix_Project
+&#123;
+   public class HotFixHelloWorld
+    &#123;
+        static void HelloWorld()
+        &#123;
+            UnityEngine.Debug.Log(&quot;HelloWorld&quot;);
+        &#125;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<hr>
+<p>在HotFix项目外新建一个HotFixMgr的类 来调用这个HotFixHelloWorld的类内的方法</p>
+<div class="code-wrapper"><pre class="line-numbers language-C#" data-language="C#"><code class="language-C#">public class HotFixMgr : MonoBehaviour
+&#123;
+    &#x2F;&#x2F;AppDomain是ILRuntime的入口，最好在一个单例类内保存
+    private static HotFixMgr minstance;
+
+    public static HotFixMgr instance
+    &#123;
+        get
+        &#123;
+            if (minstance &#x3D;&#x3D; null)
+            &#123;
+                minstance &#x3D; new GameObject(&quot;HotFixMgr&quot;).AddComponent&lt;HotFixMgr&gt;();
+                minstance.LoadHotFixAssembly();
+            &#125;
+
+            return minstance;
+        &#125;
+    &#125;
+    &#x2F;&#x2F;AppDomain是ILRuntime的入口，最好是在一个单例类中保存，整个游戏全局就一个，这里为了示例方便，每个例子里面都单独做了一个
+    &#x2F;&#x2F;大家在正式项目中请全局只创建一个AppDomain
+    public AppDomain appdomain;
+    System.IO.MemoryStream fs;
+    System.IO.MemoryStream p;
+
+    void LoadHotFixAssembly()
+    &#123;
+        &#x2F;&#x2F;首先实例化ILRuntime的AppDomain，AppDomain是一个应用程序域，每个AppDomain都是一个独立的沙盒
+        appdomain &#x3D; new ILRuntime.Runtime.Enviorment.AppDomain();
+        &#x2F;&#x2F;正常项目中应该是自行从其他地方下载dll，或者打包在AssetBundle中读取，平时开发以及为了演示方便直接从StreammingAssets中读取，
+        &#x2F;&#x2F;正式发布的时候需要大家自行从其他地方读取dll
+
+        &#x2F;&#x2F;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        &#x2F;&#x2F;这个DLL文件是直接编译HotFix_Project.sln生成的，已经在项目中设置好输出目录为StreamingAssets，在VS里直接编译即可生成到对应目录，无需手动拷贝
+        &#x2F;&#x2F;工程目录在Assets\Samples\ILRuntime\1.6\Demo\HotFix_Project~
+#if UNITY_ANDROID
+        WWW www &#x3D; new WWW(Application.streamingAssetsPath + &quot;&#x2F;HotFix_Project.dll&quot;);
+#else
+        WWW www &#x3D; new WWW(&quot;file:&#x2F;&#x2F;&#x2F;&quot; + Application.streamingAssetsPath + &quot;&#x2F;HotFix_Project.dll&quot;);
+#endif
+        while (!www.isDone)
+        &#123;
+            Thread.Sleep(100);
+        &#125;
+        if (!string.IsNullOrEmpty(www.error))
+            UnityEngine.Debug.LogError(www.error);
+        byte[] dll &#x3D; www.bytes;
+        www.Dispose();
+
+        &#x2F;&#x2F;PDB文件是调试数据库，如需要在日志中显示报错的行号，则必须提供PDB文件，不过由于会额外耗用内存，正式发布时请将PDB去掉，下面LoadAssembly的时候pdb传null即可
+#if UNITY_ANDROID
+        www &#x3D; new WWW(Application.streamingAssetsPath + &quot;&#x2F;HotFix_Project.pdb&quot;);
+#else
+        www &#x3D; new WWW(&quot;file:&#x2F;&#x2F;&#x2F;&quot; + Application.streamingAssetsPath + &quot;&#x2F;HotFix_Project.pdb&quot;);
+#endif
+        while (!www.isDone)
+        &#123;
+            Thread.Sleep(100);
+        &#125;
+     
+        if (!string.IsNullOrEmpty(www.error))
+            UnityEngine.Debug.LogError(www.error);
+        byte[] pdb &#x3D; www.bytes;
+        fs &#x3D; new MemoryStream(dll);
+        p &#x3D; new MemoryStream(pdb);
+        try
+        &#123;
+            appdomain.LoadAssembly(fs, p, new ILRuntime.Mono.Cecil.Pdb.PdbReaderProvider());
+        &#125;
+        catch
+        &#123;
+            Debug.LogError(&quot;加载热更DLL失败，请确保已经通过VS打开Assets&#x2F;Samples&#x2F;ILRuntime&#x2F;1.6&#x2F;Demo&#x2F;HotFix_Project&#x2F;HotFix_Project.sln编译过热更DLL&quot;);
+        &#125;
+
+
+        InitializeILRuntime();
+        OnHotFixLoaded();
+
+    &#125;
+
+    private void OnHotFixLoaded()
+    &#123;
+        &#x2F;&#x2F;HotFixMgr.instance.appdomain.Invoke(&quot;HotFix_Project.HotFixHelloWorld&quot;, &quot;HelloWorld&quot;, null, null);
+
+    &#125;
+
+    private void InitializeILRuntime()
+    &#123;
+#if DEBUG &amp;&amp; (UNITY_EDITOR || UNITY_ANDROID || UNITY_IPHONE)
+        &#x2F;&#x2F;由于Unity的Profiler接口只允许在主线程使用，为了避免出异常，需要告诉ILRuntime主线程的线程ID才能正确将函数运行耗时报告给Profiler
+        appdomain.UnityMainThreadID &#x3D; System.Threading.Thread.CurrentThread.ManagedThreadId;
+#endif
+        &#x2F;&#x2F;这里做一些ILRuntime的注册，HelloWorld示例暂时没有需要注册的
+
+    &#125;
+    private void OnDestroy()
+    &#123;
+        if (fs !&#x3D; null)
+            fs.Close();
+        if (p !&#x3D; null)
+            p.Close();
+        fs &#x3D; null;
+        p &#x3D; null;
+    &#125;
+
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<hr>
+<p>随后我们试着输出HelloWord</p>
+<div class="code-wrapper"><pre class="line-numbers language-C#" data-language="C#"><code class="language-C#">public class Demo_HelloWorld : MonoBehaviour
+&#123;
+    &#x2F;&#x2F; Start is called before the first frame update
+    void Start()
+    &#123;
+        string className &#x3D; &quot;HotFix_Project.HotFixHelloWorld&quot;;
+        string funcName &#x3D; &quot;HelloWorld&quot;;
+        HotFixMgr.instance.appdomain.Invoke(className, funcName, null, null);
+
+    &#125;
+
+    &#x2F;&#x2F; Update is called once per frame
+    void Update()
+    &#123;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/20211230151317.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>总结：ILRuntime热更的一个基本的流程是将项目代码打包为dll，这个dll可以直接放在项目文件中（DEBUG阶段），也可以打包到AB包中并从远端下载后加载（RELEASE阶段）。在工程中，使用AppDomain调用dll文件中的相应方法即可实现热更新（可以提供一个固定的开始热更新方法并调用这个方法，然后热更新部分再在这个方法中调用其他热更新资源）。</p>
+<h3 id="2-基于ILRuntime实现MonoBehaviour行为"><a href="#2-基于ILRuntime实现MonoBehaviour行为" class="headerlink" title="2.基于ILRuntime实现MonoBehaviour行为"></a>2.基于ILRuntime实现MonoBehaviour行为</h3><p>热更程序集里拥有MonoBehaviour能力</p>
+<p>方法一：继承MonoBehaviour</p>
+<p>因为MonoBehaviour隶属于主程序集，热更程序集 继承 主程序集 属于跨域继承</p>
+<p>运行性能低，而且需要编写接口适配，无论是性能和开发效率都不具备优势</p>
+<p>方法二：自行架构</p>
+<p>主工程 适配器</p>
+<p>HotFixMonoBehaviourAdapter（通过字符串实例化热更对象，并且调用生命周期的方法，例如Awake Start等）</p>
+<p>HotFixMonoBehaviour（实现生命周期函数）</p>
+<hr>
+<p>我们新建HotFixMonoBehaviourAdapter类</p>
+<div class="code-wrapper"><pre class="line-numbers language-C#" data-language="C#"><code class="language-C#">public class HotFixMonoBehaviourAdapter : MonoBehaviour
+&#123;
+    public string bindClass;
+    private IType classType;
+    private ILTypeInstance instance;
+
+    private IMethod start_method;
+    private IMethod update_method;
+    private IMethod OnDestroy_method;
+
+
+    void Awake()
+    &#123;
+        &#x2F;&#x2F;需要创建的类型
+        classType &#x3D; HotFixMgr.instance.appdomain.LoadedTypes[bindClass];
+
+        &#x2F;&#x2F;创建实例
+        instance &#x3D; (classType as ILType).Instantiate();
+
+        &#x2F;&#x2F;通过反射获得生命周期
+        IMethod awake_method &#x3D; classType.GetMethod(&quot;Awake&quot;, 0);
+        start_method &#x3D; classType.GetMethod(&quot;Start&quot;, 0);
+        update_method &#x3D; classType.GetMethod(&quot;Update&quot;, 0);
+        OnDestroy_method &#x3D; classType.GetMethod(&quot;OnDestroy&quot;, 0);
+
+        if (awake_method !&#x3D; null)
+        &#123;
+            HotFixMgr.instance.appdomain.Invoke(awake_method, instance);
+        &#125;
+    &#125;
+
+
+    private void Start()
+    &#123;
+        if (start_method !&#x3D; null)
+        &#123;
+            HotFixMgr.instance.appdomain.Invoke(start_method, instance);
+        &#125;
+    &#125;
+
+    private void Update()
+    &#123;
+        if (update_method !&#x3D; null)
+        &#123;
+            HotFixMgr.instance.appdomain.Invoke(update_method, instance);
+        &#125;
+    &#125;
+    private void OnDestroy()
+    &#123;
+        if (OnDestroy_method !&#x3D; null)
+        &#123;
+            HotFixMgr.instance.appdomain.Invoke(OnDestroy_method, instance);
+        &#125;
+        instance &#x3D; null;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>HotFixMonoBehaviour类</p>
+<div class="code-wrapper"><pre class="line-numbers language-C#" data-language="C#"><code class="language-C#">namespace HotFix_Project
+&#123;
+    class HotFixMonoBehaviour
+    &#123;
+        void Awake()
+        &#123;
+            Debug.Log(&quot;Awake&quot;);
+        &#125;
+
+        void Start()
+        &#123;
+            Debug.Log(&quot;Start&quot;);
+        &#125;
+
+        void Update()
+        &#123;
+            Debug.Log(&quot;Update&quot;);
+        &#125; 
+        void OnDestroy()
+        &#123;
+            Debug.Log(&quot;OnDestroy&quot;);
+        &#125;
+
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>将HotFixMonoBehaviourAdapter挂到游戏物体上，传入命名空间和类名</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/Snipaste_2021-12-30_15-37-51.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>随后运行后，我们可以看到我们热更程序集里的脚本都运行了，删除游戏对象后，OnDestroy也执行了</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/1640860053260.png" srcset="/img/loading.gif" lazyload alt="1640860053260"></p>
+<h3 id="3-自定义委托注册"><a href="#3-自定义委托注册" class="headerlink" title="3.自定义委托注册"></a>3.自定义委托注册</h3><p>我们在HotFix_Project中添加TestRun脚本写一个点击，同时也要记得把Unity的UIDLl引用添加到我们的HotFix_Project中</p>
+<p>默认情况下只支持Action Func委托</p>
+<p>因为ILRuntime默认情况下只支持系统默认的委托，而UnityAction属于自定义委托，所以我们要自己写委托来兼容，回到HotFixMgr脚本InitializeILRuntime 添加委托</p>
+<div class="code-wrapper"><pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">    private void InitializeILRuntime()
+    &#123;
+#if DEBUG &amp;&amp; (UNITY_EDITOR || UNITY_ANDROID || UNITY_IPHONE)
+        &#x2F;&#x2F;由于Unity的Profiler接口只允许在主线程使用，为了避免出异常，需要告诉ILRuntime主线程的线程ID才能正确将函数运行耗时报告给Profiler
+        appdomain.UnityMainThreadID &#x3D; System.Threading.Thread.CurrentThread.ManagedThreadId;
+#endif
+        &#x2F;&#x2F;这里做一些ILRuntime的注册，HelloWorld示例暂时没有需要注册的
+
+        appdomain.DelegateManager.RegisterDelegateConvertor&lt;UnityEngine.Events.UnityAction&gt;((act) &#x3D;&gt;
+        &#123;
+            return new UnityEngine.Events.UnityAction((() &#x3D;&gt;
+            &#123;
+                ((Action) act).Invoke();
+            &#125;));
+        &#125;);
+    &#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>运行 这时候能看到我们的点击已经被调用了</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211230185605258.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><strong>CLR优化</strong></p>
+<p>如果，我们在HotFix_Project中访问了Vector3这个成员，由于该结构体的主程序是unity的程序集，这种跨程序集的访问使用的是反射的方法进行访问的，我们就可以使用CLR的绑定避开反射的访问</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211230190213184.png" srcset="/img/loading.gif" lazyload alt="image-20211230190213184"></p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211230190345279.png" srcset="/img/loading.gif" lazyload alt="image-20211230190345279"></p>
+<p>接着我们在HotFixMgr类的InitializeILRuntime方法内注册绑定</p>
+<div class="code-wrapper"><pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">&#x2F;&#x2F;注册CLR绑定,避免过多的反射访问,提升性能
+       ILRuntime.Runtime.Generated.CLRBindings.Initialize(appdomain);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<p>绑定后，热更工程内的Vector3就不会使用反射的形式了从而提高了性能</p>
+<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20211230190852367.png" srcset="/img/loading.gif" lazyload alt="image-20211230190852367"></p>
+<p>需要热更的部分为两个部分 </p>
+<ul>
+<li>变化频率低的通用业务</li>
+<li>变化频率高的游戏业务</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%83%AD%E6%9B%B4%E6%96%B0/">热更新</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSharp/">CSharp</a>
+                    
+                      <a class="hover-with-bg" href="/tags/ILRuntime/">ILRuntime</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/28/MongoDB/">
+                        <span class="hidden-mobile">MongoDB</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
