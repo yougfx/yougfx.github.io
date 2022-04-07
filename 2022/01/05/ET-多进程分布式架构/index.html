@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="Heart Signal">
 <meta property="og:description" content="多进程Socket">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/qfengly/image-bed/raw/master/Image/20220105162025.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20220407115210.png">
 <meta property="article:published_time" content="2022-01-05T12:36:17.000Z">
-<meta property="article:modified_time" content="2022-01-16T13:51:44.277Z">
+<meta property="article:modified_time" content="2022-04-07T03:58:49.112Z">
 <meta property="article:author" content="Heart">
 <meta property="article:tag" content="Unity">
 <meta property="article:tag" content="Socket">
 <meta property="article:tag" content="GameFramework">
 <meta property="article:tag" content="ET">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://gitee.com/qfengly/image-bed/raw/master/Image/20220105162025.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20220407115210.png">
   
   
   <title>ET-多进程分布式架构 - Heart Signal</title>
@@ -269,18 +269,18 @@
             
             <div class="markdown-body">
               <h3 id="游戏服务器架构"><a href="#游戏服务器架构" class="headerlink" title="游戏服务器架构"></a>游戏服务器架构</h3><p><strong>第一代游戏服务器架构</strong></p>
-<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20220112101825948.png" srcset="/img/loading.gif" lazyload alt="image-20220112101825948"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20220112101825948.png" srcset="/img/loading.gif" lazyload alt="image-20220112101825948"></p>
 <p>使用单台物理机，单个游戏服务器程序进程 单线程无阻塞Socket来服务所有的玩家，，每隔一秒与玩家进行更新同步数据</p>
 <p>处理的速度是非常非常低的，且因为当时没有数据库，数据是存在本地的，要对本地数据进行IO读写</p>
 <p><strong>第二代游戏服务器架构</strong></p>
-<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20220112102523633.png" srcset="/img/loading.gif" lazyload alt="image-20220112102523633"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20220112102523633.png" srcset="/img/loading.gif" lazyload alt="image-20220112102523633"></p>
 <p>采用分区分服模式，同时引入数据库软件存储游戏数据，用于存储游戏数据，多个游戏服务器进程同时运行，每个游戏服务器都是独立的</p>
 <p><strong>第三代游戏服务器架构 (三层架构)</strong></p>
-<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20220112103211546.png" srcset="/img/loading.gif" lazyload alt="image-20220112103211546"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/image-20220112103211546.png" srcset="/img/loading.gif" lazyload alt="image-20220112103211546"></p>
 <p>发展处让玩家统一连接的网关服务器，而数据库存储的任务则交由数据库代理服务器进程处理，游戏服务器进程专心处理游戏功能业务逻辑</p>
 <p>玩家发出的请求交给Gate网关 网关转发给服务器进程。 因为之前玩家是直接连接游戏服务器进程，那么服务器进程就要管理大量的Socket连接 还要对不同的Socket进程进行IO读写，效率慢，所以我们将与网络连接的功能单独提取出来交给Gate网关进行处理</p>
 <p><strong>第三代游戏服务器架构 (无缝地图)</strong></p>
-<p><img src="https://gitee.com/qfengly/image-bed/raw/master/Image/image-20220116100634104.png" srcset="/img/loading.gif" lazyload alt="image-20220116100634104"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ShyHeart/Photo/photo/20220407115758.png" srcset="/img/loading.gif" lazyload alt="image-20220116100634104"></p>
 <p>玩家可以在不同的地图之间 进行无缝地图传送 大型MMORPG的标准配置</p>
 
             </div>
